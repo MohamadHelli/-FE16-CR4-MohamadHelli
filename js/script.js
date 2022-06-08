@@ -2,7 +2,15 @@ let days = JSON.parse(list);
 
 function updateHTML(arr) {
     document.getElementById("menu").innerHTML = "";
+    let color = "";
     for (let info of arr) {
+        if (info.level < 2) {
+            color = "success";
+        } else if (info.level < 4) {
+            color = "warning"
+        } else {
+            color = "danger"
+        }
         document.getElementById("menu").innerHTML += `
         <div class="col-lg-3 col-md-5 col-sm-10 col-xs-12">
             <div class="card shadow-lg mb-5 bg-body rounded" style="width: 18rem;">
@@ -21,7 +29,7 @@ function updateHTML(arr) {
                 <p>${info.description}</p>
                 <hr>
                 <p class="card-text"> 
-                <i class="fa-solid fa-triangle-exclamation"></i> Priority level: <a class="btn btn-sm btn-success butlevel "><span class="result">${info.level}</span></a></p>
+                <i class="fa-solid fa-triangle-exclamation"></i> Priority level: <a class="btn btn-sm btn-${color} butlevel "><span class="result">${info.level}</span></a></p>
                 <p><i class="fa-solid fa-calendar-days"></i> Deadline: ${info.Date}</p>
                 <hr>
                 <div class="d-flex d-flex justify-content-end gap-2">
@@ -34,6 +42,7 @@ function updateHTML(arr) {
     `;
     }
     increaselikes();
+
 }
 
 function increaselikes() {
@@ -41,27 +50,19 @@ function increaselikes() {
     for (let i = 0; i < likebtn.length; i++) {
         likebtn[i].addEventListener("click", function() {
             days[i].level++;
-            document.getElementsByClassName("result")[i].innerHTML = days[i].level;
-            days[i].level;
-            var sortedArray = days.sort((a, b) => b.level - a.level);
-            updateHTML(sortedArray);
-            changeColor(i, likebtn[i]);
+            updateHTML(days);
         });
     }
 }
 
-function changeColor(i, likebtn) {
-    if (days[i].level <= 1) {
-        document.getElementsByClassName("butlevel").classList.add("btn-success")[i];
-    } else if (days[i].level <= 3) {
-        likebtn.classList.add("btn-warning");
-    } else if (days[i].level <= 5) {
-        likebtn.classList.add("btn-danger");
-    } else {
-        likebtn.classList.add("btn-danger");
-    }
-}
-
-
 updateHTML(days);
-increaselikes();
+
+function sortmm() {
+    days.sort(function(min, max) {
+        return max.level - min.level;
+    });
+}
+document.getElementById("sortm").addEventListener("click", function() {
+    sortmm();
+    updateHTML(days);
+})
